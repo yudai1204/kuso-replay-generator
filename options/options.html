@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Options</title>
+</head>
+<body>
+    <h1>Options</h1>
+    <!-- <div>
+        <h2>Open AI API Key</h2>
+        Open AI API Key: <input type="text" id="openai_api_key">
+    </div> -->
+    <div>
+        <h2>オプション設定</h2>
+        <p>:user: リプライを送る相手の名前</p>
+        <p>:tweet: リプライを送る対象のツイート本文</p>
+        <p>:beforeTweet: リプライを送る対象のリプライ先本文</p>
+        <div>
+            <div>正論パンチ: </div><textarea name="reply1" id="reply1" cols="30" rows="10"></textarea>
+        </div>
+        <div>
+            <div>無関係の話: </div><textarea name="reply2" id="reply2" cols="30" rows="10"></textarea>
+        </div>
+        <div>
+            <div>不謹慎を指摘: </div><textarea name="reply3" id="reply3" cols="30" rows="10"></textarea>
+        </div>
+        <div>
+            <div>自分語り: </div><textarea name="reply4" id="reply4" cols="30" rows="10"></textarea>
+        </div>
+    <div>
+        <button id="save">保存</button>
+    </div>
+    <script src="./options.js"></script>
+</body>
+</html>
