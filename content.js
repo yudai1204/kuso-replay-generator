@@ -24,66 +24,76 @@ setInterval(() => {
 const insertBtns = (beforeTweet, maintweet, username) => {
     //ツールバーにボタンを追加
     if(!document.getElementById("REPLAI_BUTTONS2") && document.querySelector('div[data-testid="toolBar"]')){
-        document.querySelector('div[data-testid="toolBar"]').insertAdjacentHTML('beforebegin', 
-        `
-        <style>
-        .replaiso-btn-style{
-            border-radius: 9999px;
-            border: 1.4px solid #1da1f2;
-            color: #1da1f2;
-            padding: 4px 8px;
-            margin: 0 4px;
-            cursor: pointer;
-        }
-        .ext-pointer-none {
-            pointer-events: none;
-            opacity: 0.5;
-        }
-        .replaiso-btn-style:hover{
-            background-color: #1da1f222;
-        }
-        </style>
-        <div id="REPLAI_BUTTONS2" class="REPLAI_BUTTONS" style="display: flex; flex-wrap: wrap; align-items: center; height: 100%; margin-top: 8px;">
-        <div class="replaiso-btn-style ext-kusoripu-btn" data-index="0">正論パンチ</div>
-        <div class="replaiso-btn-style ext-kusoripu-btn" data-index="1">無関係の話</div>
-        <div class="replaiso-btn-style ojisan-koubun-btn" data-index="">おじさん構文</div>
-        <div class="replaiso-btn-style ext-kusoripu-btn" data-index="2">不謹慎を指摘</div>
-        <div class="replaiso-btn-style ext-kusoripu-btn" data-index="3">自分語り</div>
-        `);
-        document.querySelectorAll('.ext-kusoripu-btn').forEach((btn) => {
-            btn.addEventListener('click', (e) => {
-                console.log(e.target.innerText);
-                document.querySelectorAll('.replaiso-btn-style').forEach((btn2) => {
-                    btn2.classList.add("ext-pointer-none");
-                });
-                getGptResponse(maintweet.innerText, beforeTweet.innerText, username, e.target.getAttribute("data-index"));
-            });
-        });
-        document.querySelector(".ojisan-koubun-btn").addEventListener('click', (e) => {
-            console.log(e.target.innerText);
-            document.querySelectorAll('.replaiso-btn-style').forEach((btn2) => {
-                btn2.classList.add("ext-pointer-none");
-            });
-            chrome.runtime.sendMessage({
-                action: "fetchOjisan",
-                query: {
-                    user: username
-                }
-            },(response) => {
-                if(response.error){
-                    alert("おじさん構文APIとの通信にエラーが発生しました。");
-                    return;
-                }else{
-                    console.log(response);
-                    //ツイート本文を入力
-                    const n = document.querySelector('[data-testid="tweetTextarea_0"]'),i = new DataTransfer;
-                    i.setData("text/plain", response.message), null == n || n.dispatchEvent(new ClipboardEvent("paste", { dataType: "text/plain", data: response, bubbles: !0, clipboardData: i, cancelable: !0 }))
-                    //見た目を戻す
-                    document.querySelectorAll('.ext-pointer-none').forEach((btn2) => {
-                        btn2.classList.remove("ext-pointer-none");
+        chrome.storage.local.get({
+            btns: [
+                "正論パンチ",
+                "無関係の話",
+                "不謹慎を指摘",
+                "自分語り",
+                "おじさん構文"
+            ]
+        },function(btns){
+            document.querySelector('div[data-testid="toolBar"]').insertAdjacentHTML('beforebegin', 
+            `
+            <style>
+            .replaiso-btn-style{
+                border-radius: 9999px;
+                border: 1.4px solid #1da1f2;
+                color: #1da1f2;
+                padding: 4px 8px;
+                margin: 0 4px;
+                cursor: pointer;
+            }
+            .ext-pointer-none {
+                pointer-events: none;
+                opacity: 0.5;
+            }
+            .replaiso-btn-style:hover{
+                background-color: #1da1f222;
+            }
+            </style>
+            <div id="REPLAI_BUTTONS2" class="REPLAI_BUTTONS" style="display: flex; flex-wrap: wrap; align-items: center; height: 100%; margin-top: 8px;">
+            <div class="replaiso-btn-style ext-kusoripu-btn" data-index="0">${btns.btns[0]}</div>
+            <div class="replaiso-btn-style ext-kusoripu-btn" data-index="1">${btns.btns[1]}</div>
+            <div class="replaiso-btn-style ext-kusoripu-btn" data-index="2">${btns.btns[2]}</div>
+            <div class="replaiso-btn-style ext-kusoripu-btn" data-index="3">${btns.btns[3]}</div>
+            <div class="replaiso-btn-style ext-kusoripu-btn" data-index="4">${btns.btns[4]}</div>
+            `);
+            document.querySelectorAll('.ext-kusoripu-btn').forEach((btn) => {
+                btn.addEventListener('click', (e) => {
+                    console.log(e.target.innerText);
+                    document.querySelectorAll('.replaiso-btn-style').forEach((btn2) => {
+                        btn2.classList.add("ext-pointer-none");
                     });
-                }
+                    getGptResponse(maintweet.innerText, beforeTweet.innerText, username, e.target.getAttribute("data-index"));
+                });
             });
+            // document.querySelector(".ojisan-koubun-btn").addEventListener('click', (e) => {
+            //     console.log(e.target.innerText);
+            //     document.querySelectorAll('.replaiso-btn-style').forEach((btn2) => {
+            //         btn2.classList.add("ext-pointer-none");
+            //     });
+            //     chrome.runtime.sendMessage({
+            //         action: "fetchOjisan",
+            //         query: {
+            //             user: username
+            //         }
+            //     },(response) => {
+            //         if(response.error){
+            //             alert("おじさん構文APIとの通信にエラーが発生しました。");
+            //             return;
+            //         }else{
+            //             console.log(response);
+            //             //ツイート本文を入力
+            //             const n = document.querySelector('[data-testid="tweetTextarea_0"]'),i = new DataTransfer;
+            //             i.setData("text/plain", response.message), null == n || n.dispatchEvent(new ClipboardEvent("paste", { dataType: "text/plain", data: response, bubbles: !0, clipboardData: i, cancelable: !0 }))
+            //             //見た目を戻す
+            //             document.querySelectorAll('.ext-pointer-none').forEach((btn2) => {
+            //                 btn2.classList.remove("ext-pointer-none");
+            //             });
+            //         }
+            //     });
+            // });
         });
     }
 };

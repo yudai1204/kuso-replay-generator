@@ -1,6 +1,30 @@
 import generateAnswer from "./gptrequst.js"
 
-const API_KEY = '';
+const replys = [
+    "日本語で答えてください。「:tweet:」というツイートに対して80文字以内で論理的に反論してください。",
+    "日本語で答えてください。「:tweet:」という話と全く関係のない話を80文字以内で作成してください。",
+    "日本語で答えてください。「:tweet:」という文章にある不謹慎なことがらについて、80文字以内で強く指摘及び注意して。語尾は「しろ」など強い命令形にして。",
+    "日本語で答えてください。:word:についての何気ない身の上話を80文字以内でしてください",
+    `<sentence1>は「桃希」という人物に対する返答です。
+<sentence2>は「うらん」という人物に対する返答です。
+<sentence3>は「ひろえ」という人物に対する返答です。
+
+<sentence1>
+あれ😱💦(-_-;)(^_^;桃希ちゃん、朝と夜間違えたのかな❗❓（￣ー￣?）✋❓小生はまだ起きてますよ〜(^з<)今日は青森30度超えるんだって^^;暑いね〜^^;(^▽^;)(￣Д￣；；(T_T)こんな日は小生と裸のお付き合い（笑）(^o^)しよ😃✋(^з<)なんてね(^_^)
+</sentence1>
+<sentence2>
+うらんﾁｬﾝ、オッハー💗😄(^_^)(^o^)今日は晴れだけどなにするのかナ⁉✋❓（￣ー￣?）😜⁉️よく頑張ったね😃♥ えらいえライ(^з<)
+</sentence2>
+<sentence3>
+ひろえﾁｬﾝ、久しぶり🎵ひろえﾁｬﾝも今日も2時までお仕事カナ✋❓😜⁉️（￣ー￣?）❗❓僕は、すごく心配だよ😰(T_T)(^_^;(￣Д￣；；そんなときは、美味しいもの食べて、元気出さなきゃだネ😚😃♥
+</sentence3>
+
+文章の特徴として、カタカナとひらがなを交互に使う、句読点が多い、馴れ馴れしいなどの特徴があります。
+これを元にして「:user:」という人物の「:word:」に関する話に対しての返答を以下の制約を守りながら80文字程度で書きなさい。
+・敬語は使わずに馴れ馴れしくする。
+・絵文字の直前の単語や語尾は50%の確率でカタカナにしなさい。(例: 今日は晴れだけどなにするのかナ😂😂)
+・敬称は「ﾁｬﾝ」にしなさい。`
+];
 const API_URL = 'https://api.openai.com/v1/chat/completions';
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
@@ -16,19 +40,34 @@ function fetchChatGptResponse(request, sendResponse) { // web版を無料で使�
     console.log(request);
     chrome.storage.local.get({
         apiKey: "",
-        replys: [
-            "日本語で答えてください。「:tweet:」というツイートに対して80文字以内で論理的に反論してください。",
-            "日本語で答えてください。「:tweet:」という話と全く関係のない話を80文字以内で作成してください。",
-            "日本語で答えてください。「:tweet:」という文章中にある不謹慎なことがらについて、80文字以内で強く指摘及び注意して。語尾は「しろ」など強い命令形にして。",
-            "日本語で答えてください。:tweet:という文章内のとある単語から連想し、文章の内容自体とは関係していない、「といえば」を含んだ身の上話を80文字以内でしてください"
-        ]
+        replys: replys
     }, function (items) {
         const sendContent = (items.replys[request.query.mode]).replace(/:tweet:/g, request.query.tweet).replace(/:user:/g, request.query.user).replace(/:beforeTweet:/g, request.query.beforeTweet);
         console.log(sendContent);
-        generateAnswer(sendContent).then(answer => {
-            console.log({answer: answer});
-            sendResponse(answer);
-        });
+        //特徴的な単語を取得する
+        if(items.replys[request.query.mode].includes(":word:")){
+            generateAnswer(`「${request.query.tweet.replace(/\s+/," ")}」という文章から特徴的な単語を1つ選び、単語名だけを返してください。\n以下の形に添って返してください。\n\n特徴的な単語:「〇〇」`)
+            .then(answer => {
+                if(answer == "CLOUDFLARE/UNAUTHORIZED"){
+                    sendResponse("CLOUDFLARE/UNAUTHORIZED");
+                    return;
+                }else if(answer == "UNKNOWNERROR"){
+                    sendResponse("UNKNOWNERROR");
+                    return;
+                }
+                const word = answer.replace(/特徴的な単語:「/g,"").replace(/」/g,"").replace(/s+/g,"");
+                console.log({word: word});
+                generateAnswer(sendContent.replace(/:word:/g, word)).then(answer => {
+                    console.log({answer: answer});
+                    sendResponse(answer);
+                });
+            });
+        }else{
+            generateAnswer(sendContent).then(answer => {
+                console.log({answer: answer});
+                sendResponse(answer);
+            });
+        }
     });
 }
 
@@ -37,12 +76,7 @@ function fetchChatGptResponseByAPI(request, sendResponse) { // 有料APIを使�
     console.log(request);
     chrome.storage.local.get({
         apiKey: "",
-        replys: [
-            "日本語で答えてください。「:tweet:」というツイートに対して80文字以内で論理的に反論してください。",
-            "日本語で答えてください。「:tweet:」という話と全く関係のない話を80文字以内で作成してください。",
-            "日本語で答えてください。「:tweet:」という文章中にある不謹慎なことがらについて、80文字以内で強く指摘及び注意して。語尾は「しろ」など強い命令形にして。",
-            "日本語で答えてください。:tweet:という文章内のとある単語から連想し、文章の内容自体とは関係していない、「といえば」を含んだ身の上話を80文字以内でしてください"
-        ]
+        replys: replys
     }, function (items) {
         const sendContent = (items.replys[request.query.mode]).replace(/:tweet:/g, request.query.tweet).replace(/:user:/g, request.query.user).replace(/:beforeTweet:/g, request.query.beforeTweet);
         console.log(sendContent);
@@ -115,3 +149,4 @@ function fetchOjisan(request, sendResponse) {
             sendResponse({ error: true });
         });
 }
+
