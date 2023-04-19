@@ -1,8 +1,13 @@
 {
         "manifest_version": 3,
         "name": "クソリプジェネレータ",
-        "version": "0.2.0",
+        "version": "0.2.1",
         "description": "ChatGPTにリプライを考えてもらおう",
+        "icons": {
+            "16": "icon-128.png",
+            "48": "icon-128.png",
+            "128": "icon-128.png"
+        },
         "background": {
             "service_worker": "background/background.js",
             "type": "module"
