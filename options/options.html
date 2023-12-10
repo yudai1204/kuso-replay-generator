@@ -1,42 +1,85 @@
 <!DOCTYPE html>
 <html lang="ja">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Options</title>
-</head>
-<body>
+  </head>
+  <body>
     <h1>Options</h1>
-    <!-- <div>
-        <h2>Open AI API Key</h2>
-        Open AI API Key: <input type="text" id="openai_api_key">
-    </div> -->
     <div>
-        <h2>オプション設定</h2>
-        <p>:user: リプライを送る相手の名前</p>
-        <p>:tweet: リプライを送る対象のツイート本文</p>
-        <p>:word: リプライを送る対象のツイート本文内の特徴的な単語</p>
-        <p>:beforeTweet: リプライを送る対象のリプライ先本文</p>
+      <h2>オプション設定</h2>
+      <p>:user: リプライを送る相手の名前</p>
+      <p>:tweet: リプライを送る対象のツイート本文</p>
+      <p>:word: リプライを送る対象のツイート本文内の特徴的な単語</p>
+      <p>:beforeTweet: リプライを送る対象のリプライ先本文</p>
+      <div>
         <div>
-            <div>ボタン1:<br><input type="text" placeholder="正論パンチ" id="reply1_title"> </div><textarea name="reply1" id="reply1" cols="30" rows="10"></textarea>
+          ボタン1:<br /><input
+            type="text"
+            placeholder="正論パンチ"
+            id="reply1_title"
+          />
         </div>
+        <textarea name="reply1" id="reply1" cols="30" rows="10"></textarea>
+      </div>
+      <div>
         <div>
-            <div>ボタン2:<br><input type="text" placeholder="無関係の話" id="reply2_title"> </div><textarea name="reply2" id="reply2" cols="30" rows="10"></textarea>
+          ボタン2:<br /><input
+            type="text"
+            placeholder="無関係の話"
+            id="reply2_title"
+          />
         </div>
+        <textarea name="reply2" id="reply2" cols="30" rows="10"></textarea>
+      </div>
+      <div>
         <div>
-            <div>ボタン3:<br><input type="text" placeholder="不謹慎を指摘" id="reply3_title"> </div><textarea name="reply3" id="reply3" cols="30" rows="10"></textarea>
+          ボタン3:<br /><input
+            type="text"
+            placeholder="不謹慎を指摘"
+            id="reply3_title"
+          />
         </div>
+        <textarea name="reply3" id="reply3" cols="30" rows="10"></textarea>
+      </div>
+      <div>
         <div>
-            <div>ボタン4:<br><input type="text" placeholder="自分語り" id="reply4_title"> </div><textarea name="reply4" id="reply4" cols="30" rows="10"></textarea>
+          ボタン4:<br /><input
+            type="text"
+            placeholder="自分語り"
+            id="reply4_title"
+          />
         </div>
+        <textarea name="reply4" id="reply4" cols="30" rows="10"></textarea>
+      </div>
+      <div>
         <div>
-            <div>ボタン5:<br><input type="text" placeholder="おじさん構文" id="reply5_title"> </div><textarea name="reply2" id="reply5" cols="30" rows="10"></textarea>
+          ボタン5:<br /><input
+            type="text"
+            placeholder="おじさん構文"
+            id="reply5_title"
+          />
         </div>
+        <textarea name="reply2" id="reply5" cols="30" rows="10"></textarea>
+      </div>
+    </div>
+
     <div>
-        <button id="save">保存</button>
-        <button id="reset">初期化</button>
+      <h2>APIの使用</h2>
+      <p>OpenAIの公式APIを使用する場合は、以下にチェックをいれてください。</p>
+      <input type="checkbox" id="use_openai_api" />
+    </div>
+    <div id="openai_api_key_div">
+      <h2>Open AI API Key</h2>
+      Open AI API Key: <input type="text" id="openai_api_key" />
+    </div>
+
+    <div>
+      <button id="save">保存</button>
+      <button id="reset">初期化</button>
     </div>
     <script src="./options.js"></script>
-</body>
+  </body>
 </html>
